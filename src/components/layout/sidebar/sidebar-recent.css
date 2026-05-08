@@ -1,0 +1,50 @@
+.sidebar-section-recent .section-header {
+  gap: 6px;
+  color: var(--text-tertiary);
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  cursor: pointer;
+  font-size: var(--text-xs);
+  border-radius: 4px;
+  margin: 1px 4px;
+}
+
+.recent-item:hover {
+  background: var(--bg-hover);
+}
+
+.recent-method {
+  font-weight: var(--weight-semibold);
+  font-size: 10px;
+  text-transform: uppercase;
+  min-width: 36px;
+  flex-shrink: 0;
+}
+
+.recent-url {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+
+.recent-status {
+  font-size: 10px;
+  font-weight: var(--weight-medium);
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.recent-status.status-ok {
+  color: var(--success, #22c55e);
+}
+
+.recent-status.status-error {
+  color: var(--error, #ef4444);
+}

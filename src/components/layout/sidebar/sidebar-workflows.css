@@ -1,0 +1,125 @@
+.sidebar-section-workflows {
+  flex: 2;
+  min-height: 120px;
+}
+
+.workflow-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.workflow-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.workflow-item-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 6px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out-quart),
+              transform var(--duration-fast) var(--ease-out-quart);
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  width: 100%;
+  text-align: left;
+  position: relative;
+}
+
+.workflow-item-header:hover {
+  background: var(--bg-hover);
+  transform: translateX(1px);
+}
+
+.workflow-item.active .workflow-item-header {
+  background: var(--bg-active);
+  color: var(--accent);
+}
+
+.workflow-item.active .workflow-item-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  border-radius: var(--radius-xs);
+  background: var(--accent);
+  animation: scaleIn var(--duration-fast) var(--ease-spring) both;
+}
+
+.workflow-chevron {
+  color: var(--text-tertiary);
+  transition: transform var(--duration-fast) var(--ease-out-quart);
+  flex-shrink: 0;
+}
+
+.workflow-icon {
+  color: var(--accent);
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.workflow-item.active .workflow-icon {
+  opacity: 1;
+}
+
+.workflow-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.workflow-node-count {
+  font-size: var(--text-micro);
+  font-weight: 500;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.workflow-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out-quart);
+}
+
+.workflow-item:hover .workflow-item-actions {
+  opacity: 1;
+}
+
+.workflow-delete-btn {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.workflow-delete-btn:hover {
+  color: var(--error) !important;
+  background: var(--error-light) !important;
+}
+
+.workflow-desc {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  padding-left: 22px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: var(--leading-tight);
+}

@@ -1,0 +1,380 @@
+.data-pulse-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+  position: relative;
+  width: 200px;
+  overflow: visible;
+  cursor: pointer;
+}
+
+.data-pulse-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.data-pulse-container--enhanced {
+  transform: scale(1.05);
+}
+
+/* ---------- Theme-aware color mapping ---------- */
+.data-pulse-bar[data-pulse-state="idle"] {
+  color: var(--text-tertiary);
+}
+
+.data-pulse-bar[data-pulse-state="loading"] {
+  color: var(--accent);
+}
+
+.data-pulse-bar[data-pulse-state="complete"] {
+  color: var(--accent);
+}
+
+.data-pulse-bar[data-pulse-state="error"] {
+  color: var(--error);
+}
+
+/* SVG elements use currentColor for stroke and fill */
+.data-pulse-bar .pulse-stroke {
+  stroke: currentColor;
+}
+
+.data-pulse-bar .pulse-fill {
+  fill: currentColor;
+}
+
+/* Pipe elements use currentColor for background */
+.data-pulse-bar .pulse-pipe-track,
+.data-pulse-bar .pulse-pipe-flow,
+.data-pulse-bar .pulse-pipe-packet,
+.data-pulse-bar .pulse-pipe-break,
+.data-pulse-bar .pulse-pipe-spark {
+  background-color: currentColor;
+}
+
+/* ---------- Data Source ---------- */
+.pulse-source {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.pulse-source--enhanced {
+  transform: scale(1.1);
+}
+
+.pulse-source-dot--blink {
+  animation: sourceBlink 1.5s ease-in-out infinite;
+}
+
+@keyframes sourceBlink {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.3; }
+}
+
+/* ---------- Pulse Pipe ---------- */
+.pulse-pipe {
+  position: relative;
+  width: 80px;
+  height: 4px;
+  flex-shrink: 0;
+  border-radius: 2px;
+  overflow: visible;
+}
+
+.pulse-pipe-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  opacity: 0.15;
+  transition: all 0.3s ease;
+}
+
+.pulse-pipe--loading .pulse-pipe-track {
+  opacity: 0.25;
+}
+
+.pulse-pipe--error .pulse-pipe-track {
+  opacity: 0.1;
+}
+
+.pulse-pipe-flow {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  opacity: 0.4;
+  animation: pipeFlow 1.2s linear infinite;
+}
+
+@keyframes pipeFlow {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.pulse-pipe-packet {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  animation: packetMove 1.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes packetMove {
+  0% {
+    left: 0;
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5);
+  }
+
+  15% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+
+  85% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+
+  100% {
+    left: var(--fly-end, calc(100% - 5px));
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5);
+  }
+}
+
+.pulse-pipe--enhanced .pulse-pipe-packet {
+  animation-duration: 0.8s;
+}
+
+.pulse-pipe--enhanced .pulse-pipe-flow {
+  animation-duration: 0.8s;
+}
+
+/* Pipe Break (Error) */
+.pulse-pipe-break {
+  position: absolute;
+  top: 0;
+  width: 35px;
+  height: 100%;
+  border-radius: 2px;
+  opacity: 0.35;
+}
+
+.pulse-pipe-break--left {
+  left: 0;
+  animation: breakShakeLeft 0.6s ease-in-out infinite;
+}
+
+.pulse-pipe-break--right {
+  right: 0;
+  animation: breakShakeRight 0.6s ease-in-out infinite;
+}
+
+@keyframes breakShakeLeft {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-1px); }
+  75% { transform: translateX(1px); }
+}
+
+@keyframes breakShakeRight {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(1px); }
+  75% { transform: translateX(-1px); }
+}
+
+.pulse-pipe-spark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: sparkBlink 0.4s ease-in-out infinite;
+}
+
+@keyframes sparkBlink {
+  0%, 100% { opacity: 0.2; transform: translate(-50%, -50%) scale(0.8); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+}
+
+/* ---------- Data Terminal ---------- */
+.pulse-terminal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.pulse-terminal--idle {
+  animation: terminalBreathe 3s ease-in-out infinite;
+}
+
+@keyframes terminalBreathe {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.75; }
+}
+
+.pulse-terminal--error {
+  animation: terminalErrorShake 0.5s ease-in-out infinite;
+}
+
+@keyframes terminalErrorShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-1px); }
+  75% { transform: translateX(1px); }
+}
+
+.pulse-terminal--enhanced {
+  transform: scale(1.1);
+}
+
+/* Terminal Chart Bars */
+.pulse-terminal-bar {
+  transform-origin: bottom;
+  animation: barGrow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform: scaleY(0);
+}
+
+.pulse-terminal-bar--1 {
+  animation-delay: 0ms;
+}
+
+.pulse-terminal-bar--2 {
+  animation-delay: 120ms;
+}
+
+.pulse-terminal-bar--3 {
+  animation-delay: 240ms;
+}
+
+@keyframes barGrow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+/* Terminal Cross */
+.pulse-terminal-cross-line {
+  stroke-dasharray: 12;
+  stroke-dashoffset: 12;
+  animation: crossDraw 0.3s ease-out forwards;
+}
+
+.pulse-terminal-cross-line:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+@keyframes crossDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Terminal Cursor */
+.pulse-terminal-cursor rect {
+  animation: cursorBlink 1.2s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.15; }
+}
+
+/* Terminal Status Dot */
+.pulse-terminal-status--blink {
+  animation: statusBlink 0.6s ease-in-out infinite;
+}
+
+@keyframes statusBlink {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 0.2; }
+}
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .pulse-source-dot--blink,
+  .pulse-pipe-flow,
+  .pulse-pipe-packet,
+  .pulse-pipe-break--left,
+  .pulse-pipe-break--right,
+  .pulse-pipe-spark,
+  .pulse-terminal--idle,
+  .pulse-terminal--error,
+  .pulse-terminal-bar,
+  .pulse-terminal-cross-line,
+  .pulse-terminal-cursor rect,
+  .pulse-terminal-status--blink {
+    animation: none !important;
+  }
+
+  .pulse-terminal-bar {
+    transform: scaleY(1) !important;
+  }
+
+  .pulse-terminal-cross-line {
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+/* ---------- Performance Tiers ---------- */
+[data-performance-tier="2"] .pulse-pipe-packet {
+  animation-duration: 1.8s;
+}
+
+[data-performance-tier="2"] .pulse-pipe-flow {
+  animation-duration: 1.8s;
+}
+
+[data-performance-tier="2"] .pulse-source-dot--blink {
+  animation-duration: 2.5s;
+}
+
+[data-performance-tier="2"] .pulse-terminal--idle {
+  animation-duration: 5s;
+}
+
+[data-performance-tier="3"] .pulse-pipe-packet,
+[data-performance-tier="3"] .pulse-pipe-flow,
+[data-performance-tier="3"] .pulse-source-dot--blink,
+[data-performance-tier="3"] .pulse-terminal--idle,
+[data-performance-tier="3"] .pulse-terminal--error,
+[data-performance-tier="3"] .pulse-terminal-bar,
+[data-performance-tier="3"] .pulse-terminal-cross-line,
+[data-performance-tier="3"] .pulse-terminal-cursor rect,
+[data-performance-tier="3"] .pulse-terminal-status--blink {
+  animation: none !important;
+}
+
+[data-performance-tier="3"] .pulse-terminal-bar {
+  transform: scaleY(1) !important;
+}
+
+[data-performance-tier="3"] .pulse-terminal-cross-line {
+  stroke-dashoffset: 0 !important;
+}

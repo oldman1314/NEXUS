@@ -1,0 +1,31 @@
+.tb-app-menu {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  transition: width var(--duration-slow) var(--ease-out-expo);
+}
+
+[data-visual-style="immersive"] .tb-app-menu {
+  width: calc(var(--sidebar-width) + 6px);
+  margin-left: 6px;
+}
+
+.tb-app-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  height: 100%;
+  width: 100%;
+  user-select: none;
+}
+
+.title-bar-app-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.2;
+}

@@ -1,0 +1,31 @@
+.sidebar-section-env {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.env-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  margin: 4px 8px 8px;
+  border-radius: var(--radius-md);
+  background: var(--bg-active);
+  color: var(--accent);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out-quart),
+    color var(--duration-fast) var(--ease-out-quart),
+    transform var(--duration-fast) var(--ease-spring),
+    box-shadow var(--duration-fast) var(--ease-out-quart);
+}
+
+.env-badge:hover {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.env-badge:active {
+  transform: scale(0.97);
+}

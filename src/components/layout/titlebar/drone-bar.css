@@ -1,0 +1,635 @@
+.drone-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 100%;
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+  position: relative;
+  width: 200px;
+  justify-content: center;
+  overflow: visible;
+}
+
+.combo-display {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 101;
+  animation: comboAppear 2s ease-out both;
+}
+
+.combo-level-1 {
+  color: #FFA500;
+  text-shadow: 0 0 4px rgba(255, 165, 0, 0.6);
+}
+
+.combo-level-2 {
+  color: #FF4500;
+  text-shadow: 0 0 6px rgba(255, 69, 0, 0.8);
+  animation: comboAppear 2s ease-out both, comboPulse 0.5s ease-in-out infinite;
+}
+
+.combo-level-3 {
+  color: #FF0000;
+  text-shadow: 0 0 8px rgba(255, 0, 0, 1), 0 0 12px rgba(255, 69, 0, 0.8);
+  animation: comboAppear 2s ease-out both, comboPulse 0.3s ease-in-out infinite;
+}
+
+@keyframes comboAppear {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px) scale(0.8);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1.1);
+  }
+
+  30% {
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-8px) scale(0.9);
+  }
+}
+
+@keyframes comboPulse {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.15);
+  }
+}
+
+.drone-bar__pad {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.drone-bar__station {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.drone-bar__flight-area {
+  position: relative;
+  height: 22px;
+  flex-shrink: 0;
+  flex-grow: 1;
+  overflow: visible;
+}
+
+.drone-position {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+
+.drone-bob {
+  will-change: transform;
+}
+
+.drone-bob--active {
+  animation: droneBob 2.5s ease-in-out infinite;
+}
+
+.drone-speech {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%) translateX(-4px);
+  white-space: nowrap;
+  font-size: var(--text-micro);
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-light);
+  padding: 2px 7px;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  margin-left: 6px;
+}
+
+.drone-speech--visible {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.drone-speech::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -4px;
+  transform: translateY(-50%) rotate(45deg);
+  width: 6px;
+  height: 6px;
+  background: var(--bg-elevated);
+  border-left: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.drone-svg {
+  display: block;
+  pointer-events: none;
+}
+
+.drone-svg .drone-propeller {
+  animation: dronePropellerSpin 0.6s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.drone-svg--crashed .drone-propeller {
+  animation: none;
+}
+
+.drone-svg .drone-package-group {
+  transform-origin: 16px 20px;
+  animation: dronePackageSwing 2.5s ease-in-out infinite;
+}
+
+.drone-svg--flying .drone-package-group,
+.drone-svg--crashed .drone-package-group {
+  animation: none;
+}
+
+.drone-svg--sleeping .drone-propeller {
+  animation: dronePropellerSpin 4s linear infinite !important;
+  opacity: 0.5;
+}
+
+.drone-svg--sleeping .drone-led {
+  animation: droneLedSleep 3s ease-in-out infinite;
+}
+
+.drone-svg--sleeping .drone-package-group {
+  animation: dronePackageSwingSleep 5s ease-in-out infinite;
+}
+
+.drone-bob--sleeping {
+  animation: droneSleepBob 4s ease-in-out infinite;
+}
+
+@keyframes droneSleepBob {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  25% {
+    transform: translateY(3px) rotate(-2deg);
+  }
+
+  50% {
+    transform: translateY(5px) rotate(0deg);
+  }
+
+  75% {
+    transform: translateY(3px) rotate(2deg);
+  }
+}
+
+@keyframes droneLedSleep {
+
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+
+  30% {
+    opacity: 0.2;
+  }
+
+  60% {
+    opacity: 0.1;
+  }
+}
+
+@keyframes dronePackageSwingSleep {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(5deg);
+  }
+
+  75% {
+    transform: rotate(-5deg);
+  }
+}
+
+.drone-speech--sleeping {
+  background: color-mix(in srgb, var(--bg-elevated) 80%, var(--text-tertiary));
+  color: var(--text-secondary);
+  opacity: 0.7;
+  animation: speechSleep 2s ease-in-out infinite;
+}
+
+.drone-speech--portal {
+  z-index: 9999 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.drone-sleep-portal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes speechSleep {
+
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  50% {
+    transform: translateY(-50%) translateX(-2px);
+  }
+}
+
+.drone-svg .drone-led {
+  animation: droneLedPulse 1.5s ease-in-out infinite;
+}
+
+.drone-svg--flying .drone-led {
+  animation: none;
+  opacity: 0.9;
+}
+
+.drone-svg--crashed .drone-led {
+  animation: droneLedPulse 0.3s ease-in-out infinite;
+}
+
+.landing-pad {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.landing-pad--active {
+  transform: scale(1.05);
+}
+
+.landing-pad--waiting {
+  transform: scale(1.02);
+}
+
+.pad-light {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.pad-light--on {
+  opacity: 0.8;
+  animation: padLightPulse 1.5s ease-in-out infinite;
+}
+
+.pad-light--waiting {
+  opacity: 0.7;
+  animation: padLightBlink 0.8s ease-in-out infinite;
+}
+
+.pad-light--top {
+  animation-delay: 0ms;
+}
+
+.pad-light--right {
+  animation-delay: 375ms;
+}
+
+.pad-light--bottom {
+  animation-delay: 750ms;
+}
+
+.pad-light--left {
+  animation-delay: 1125ms;
+}
+
+.network-station {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.network-station--active {
+  transform: scale(1.08);
+}
+
+.station-search-signal {
+  animation: stationSearchPulse 2s ease-in-out infinite;
+}
+
+.station-signal {
+  animation: stationSignalPulse 1.2s ease-in-out infinite;
+}
+
+.station-signal--1 {
+  animation-delay: 0ms;
+}
+
+.station-signal--2 {
+  animation-delay: 300ms;
+}
+
+.station-signal--3 {
+  animation-delay: 100ms;
+}
+
+.station-signal--4 {
+  animation-delay: 400ms;
+}
+
+.drone-crash-smoke {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  animation: droneSmoke 800ms ease-out both;
+  pointer-events: none;
+}
+
+.drone-crash-text {
+  position: absolute;
+  top: 100%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: var(--text-micro);
+  font-weight: 600;
+  color: var(--error);
+  background: var(--error-light);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  animation: droneCrashText 1800ms ease-out both;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes droneBob {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes dronePropellerSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dronePackageSwing {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(3deg);
+  }
+
+  75% {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes droneLedPulse {
+
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes padLightPulse {
+
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes padLightBlink {
+
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+
+  50% {
+    opacity: 0.05;
+  }
+}
+
+@keyframes stationSearchPulse {
+
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: scaleX(0.8);
+  }
+
+  50% {
+    opacity: 0.35;
+    transform: scaleX(1.1);
+  }
+}
+
+@keyframes stationSignalPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  30% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.3);
+  }
+}
+
+@keyframes droneSmoke {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  30% {
+    transform: scale(1.5);
+    opacity: 0.4;
+  }
+
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+@keyframes droneCrashText {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  80% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-3px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-8px);
+  }
+}
+
+[data-visual-style="immersive"] .drone-bar {
+  filter: drop-shadow(0 0 4px var(--accent-glow));
+}
+
+[data-visual-style="immersive"] .drone-speech {
+  background: color-mix(in srgb, var(--accent) 15%, var(--bg-elevated));
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+[data-visual-style="immersive"] .landing-pad--active svg circle {
+  stroke: var(--accent);
+}
+
+[data-visual-style="immersive"] .network-station--active svg circle {
+  fill: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .drone-bob--active,
+  .drone-svg .drone-propeller,
+  .drone-svg .drone-package-group,
+  .drone-svg .drone-led,
+  .pad-light--on,
+  .station-signal,
+  .station-search-signal {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+[data-performance-tier="2"] {
+  .drone-bob--active {
+    animation-duration: 4s;
+  }
+
+  .drone-svg .drone-propeller {
+    animation-duration: 1s;
+  }
+
+  .drone-svg--sleeping .drone-propeller {
+    animation-duration: 4s !important;
+    opacity: 0.5;
+  }
+
+  .drone-svg .drone-package-group {
+    animation-duration: 4s;
+  }
+
+  .drone-svg .drone-led {
+    animation-duration: 3s;
+  }
+
+  .pad-light--on {
+    animation-duration: 3s;
+  }
+
+  .pad-light--waiting {
+    animation-duration: 1.5s;
+  }
+
+  .station-search-signal {
+    animation-duration: 4s;
+  }
+
+  .station-signal {
+    animation-duration: 2.4s;
+  }
+}
+
+[data-performance-tier="3"] {
+
+  .drone-bob--active,
+  .drone-svg .drone-propeller,
+  .drone-svg .drone-package-group,
+  .drone-svg .drone-led,
+  .pad-light--on,
+  .pad-light--waiting,
+  .station-signal,
+  .station-search-signal {
+    animation: none !important;
+  }
+
+  [data-visual-style="immersive"] .drone-bar {
+    filter: none !important;
+  }
+}

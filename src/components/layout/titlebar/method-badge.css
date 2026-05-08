@@ -1,0 +1,43 @@
+.tb-method-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--method-bg);
+  color: var(--method-color);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: var(--tracking-micro);
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: var(--leading-tight);
+  flex-shrink: 0;
+  transition: background-color var(--duration-fast) var(--ease-out-quart),
+    box-shadow var(--duration-fast) var(--ease-out-quart),
+    transform var(--duration-fast) var(--ease-spring);
+}
+
+.tb-method-badge:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.tb-method-badge--sm {
+  padding: 1px 6px;
+  font-size: var(--text-micro);
+}
+
+.tb-method-badge--md {
+  padding: 3px 10px;
+  font-size: var(--text-xs);
+}
+
+[data-visual-style="immersive"] .tb-method-badge {
+  box-shadow: var(--method-glow);
+}
+
+[data-theme="dark"] .tb-method-badge:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}

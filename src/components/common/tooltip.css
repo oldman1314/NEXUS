@@ -1,0 +1,115 @@
+.tooltip {
+  z-index: 10000;
+  pointer-events: none;
+  max-width: 280px;
+  --tooltip-tx: 0;
+  --tooltip-ty: 0;
+}
+
+.tooltip-enter {
+  animation: tooltipIn var(--duration-fast) var(--ease-out-expo) both;
+}
+
+.tooltip-exit {
+  animation: tooltipOut 100ms var(--ease-in-out-quart) both;
+}
+
+.tooltip-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  background: var(--tooltip-bg);
+  box-shadow: var(--tooltip-shadow);
+  color: var(--tooltip-text);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  white-space: nowrap;
+}
+
+[data-visual-style="immersive"] .tooltip-content,
+[data-visual-style="glass"] .tooltip-content {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  will-change: backdrop-filter;
+}
+
+.tooltip-content:has(.tooltip-rich) {
+  white-space: normal;
+  padding: 8px 12px;
+}
+
+.tooltip-rich {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.tooltip-rich div {
+  white-space: nowrap;
+}
+
+.tooltip-rich div:first-child {
+  font-weight: 500;
+  color: var(--tooltip-text);
+}
+
+.tooltip-rich div:not(:first-child) {
+  color: var(--tooltip-shortcut-text);
+  font-size: var(--text-xs);
+}
+
+.tooltip-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tooltip-shortcut {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  height: 18px;
+  border-radius: var(--radius-xs);
+  background: var(--tooltip-shortcut-bg);
+  border: 1px solid var(--tooltip-shortcut-border);
+  color: var(--tooltip-shortcut-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+@keyframes tooltipIn {
+  from {
+    opacity: 0;
+    transform: translate(var(--tooltip-tx), var(--tooltip-ty)) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes tooltipOut {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--tooltip-tx), var(--tooltip-ty)) scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip-enter,
+  .tooltip-exit {
+    animation-duration: 0.01ms !important;
+  }
+}

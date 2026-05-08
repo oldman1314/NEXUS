@@ -1,0 +1,129 @@
+.title-bar {
+  height: var(--tb-height);
+  display: flex;
+  align-items: center;
+  background: var(--tb-bg);
+  border-bottom: 1px solid var(--tb-border-color);
+  box-shadow: var(--tb-shadow);
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-app-region: drag;
+  position: relative;
+  z-index: 5;
+}
+
+.title-bar__left {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  flex: 1;
+  min-width: 0;
+}
+
+.title-bar__right {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  flex: 1;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.tb-brand-area {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.title-bar-drag-region {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+  height: 100%;
+}
+
+.title-bar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-bar-app-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+}
+
+.title-bar-actions {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  -webkit-app-region: no-drag;
+}
+
+.title-bar--collapsed .tb-context-area {
+  -webkit-app-region: drag;
+}
+
+.title-bar--collapsed .tb-context-area>* {
+  -webkit-app-region: no-drag;
+}
+
+[data-visual-style="immersive"] .title-bar {
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm)) var(--glass-saturate);
+  backdrop-filter: blur(var(--glass-blur-sm)) var(--glass-saturate);
+  border-bottom: none;
+  box-shadow: var(--glass-elevation-1);
+  will-change: backdrop-filter;
+  transform: translateZ(0);
+}
+
+[data-visual-style="immersive"] .title-bar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.15) 20%,
+      rgba(255, 255, 255, 0.15) 80%,
+      transparent);
+  pointer-events: none;
+}
+
+[data-visual-style="immersive"][data-theme="dark"] .title-bar::after {
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.06) 20%,
+      rgba(255, 255, 255, 0.06) 80%,
+      transparent);
+}
+
+[data-visual-style="immersive"] .title-bar-logo {
+  animation: logoBreathe 3s ease-in-out infinite;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+[data-visual-style="immersive"] .title-bar-app-name {
+  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes logoBreathe {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+}

@@ -1,0 +1,34 @@
+- [x] VisualStyle 类型已添加到 `src/types/index.ts`
+- [x] useThemeStore 已扩展 visualStyle 状态和 setVisualStyle 方法
+- [x] data-visual-style 属性在 <html> 上正确设置和切换
+- [x] visualStyle 持久化到 theme-storage 并在页面刷新后正确恢复
+- [x] applyAccent 在 immersive 模式下额外设置 --accent-start/--accent-end/--accent-glow
+- [x] 侧边栏底部有 Sparkles 图标切换按钮
+- [x] Popover 显示 Classic 和 Immersive 两个选项，带预览色块和描述
+- [x] Classic 模式下零 CSS 变更，界面与当前完全一致
+- [x] Immersive 亮色模式下 CSS 变量正确覆盖（玻璃、渐变、光效等）
+- [x] Immersive 暗色模式下 CSS 变量正确覆盖（深空、霓虹等）
+- [x] 侧边栏具有 backdrop-filter 玻璃效果
+- [x] 主内容区使用 --bg-canvas 背景
+- [x] 请求/响应面板卡片化（圆角、阴影、边框、margin）
+- [x] 弹窗/命令面板/右键菜单具有玻璃效果
+- [x] 主内容区有渐变氛围背景 + ambientShift 动画
+- [x] 主内容区有点阵网格纹理叠加
+- [x] 请求成功时右上角出现绿色氛围光，失败时红色氛围光
+- [x] URL 栏方法色条加宽到 4px 并有微光
+- [x] 请求面板顶部有方法色渐变条
+- [x] 侧边栏请求项 hover 时左侧滑入方法色指示条
+- [x] 响应面板顶部有状态码色彩条（2xx绿/4xx橙/5xx红）
+- [x] 发送按钮具有渐变背景，hover 时渐变角度旋转
+- [x] 暗色模式下选中 Tab/发送按钮/输入框具有霓虹光效
+- [x] 响应状态码以 28px 大号数字显示
+- [x] Collection 项下方显示请求数量
+- [x] Tab 切换时底部有滑动指示器
+- [x] 输入框聚焦时底部边框从中心向两侧展开
+- [x] 空状态显示引导插画和文字
+- [x] 标题栏 Logo 有呼吸光效，标题文字有渐变色
+- [x] 发送按钮点击时有光波扩散效果
+- [x] 工作流画布背景为渐变 + 网格，节点为玻璃质感
+- [x] 命令面板有玻璃效果 + 彩虹渐变线
+- [x] 所有动画在 prefers-reduced-motion: reduce 下压缩时长
+- [x] 不支持 backdrop-filter 时回退到纯色背景

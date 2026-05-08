@@ -1,0 +1,1297 @@
+.warp-tunnel-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 100%;
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+  position: relative;
+  width: 200px;
+  justify-content: center;
+  overflow: visible;
+}
+
+.combo-display {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 101;
+  animation: comboAppear 2s ease-out both;
+}
+
+.combo-level-1 {
+  color: #FFA500;
+  text-shadow: 0 0 4px rgba(255, 165, 0, 0.6);
+}
+
+.combo-level-2 {
+  color: #FF4500;
+  text-shadow: 0 0 6px rgba(255, 69, 0, 0.8);
+  animation: comboAppear 2s ease-out both, comboPulse 0.5s ease-in-out infinite;
+}
+
+.combo-level-3 {
+  color: #FF0000;
+  text-shadow: 0 0 8px rgba(255, 0, 0, 1), 0 0 12px rgba(255, 69, 0, 0.8);
+  animation: comboAppear 2s ease-out both, comboPulse 0.3s ease-in-out infinite;
+}
+
+@keyframes comboAppear {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px) scale(0.8);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1.1);
+  }
+
+  30% {
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-8px) scale(0.9);
+  }
+}
+
+@keyframes comboPulse {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.15);
+  }
+}
+
+.warp-tunnel-bar__gateway {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.warp-tunnel-bar__beacon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.warp-tunnel-bar__flight-area {
+  position: relative;
+  height: 22px;
+  flex-shrink: 0;
+  flex-grow: 1;
+  overflow: visible;
+}
+
+.warp-signal-position {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+
+.warp-signal-bob {
+  will-change: transform;
+}
+
+.warp-signal-bob--active {
+  animation: warpSignalBob 2.5s ease-in-out infinite;
+}
+
+.warp-signal-bob--sleeping {
+  animation: warpSleepBob 4s ease-in-out infinite;
+}
+
+@keyframes warpSignalBob {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes warpSleepBob {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  25% {
+    transform: translateY(3px) rotate(-2deg);
+  }
+
+  50% {
+    transform: translateY(5px) rotate(0deg);
+  }
+
+  75% {
+    transform: translateY(3px) rotate(2deg);
+  }
+}
+
+.warp-speech {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%) translateX(-4px);
+  white-space: nowrap;
+  font-size: var(--text-micro);
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-light);
+  padding: 2px 7px;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  margin-left: 6px;
+}
+
+.warp-speech--visible {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.warp-speech::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -4px;
+  transform: translateY(-50%) rotate(45deg);
+  width: 6px;
+  height: 6px;
+  background: var(--bg-elevated);
+  border-left: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.warp-speech--sleeping {
+  background: color-mix(in srgb, var(--bg-elevated) 80%, var(--text-tertiary));
+  color: var(--text-secondary);
+  opacity: 0.7;
+  animation: speechSleep 2s ease-in-out infinite;
+}
+
+.warp-speech--portal {
+  z-index: 9999 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.warp-sleep-portal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes speechSleep {
+
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  50% {
+    transform: translateY(-50%) translateX(-2px);
+  }
+}
+
+.local-gateway {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.local-gateway--active {
+  transform: scale(1.08);
+}
+
+.local-gateway--connecting {
+  transform: scale(1.05);
+}
+
+.gateway-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.gateway-ring--spinning {
+  animation: warpGateRingSpin 3s linear infinite;
+}
+
+.gateway-ring--fast {
+  animation: warpGateRingSpin 1.2s linear infinite;
+}
+
+@keyframes warpGateRingSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.gateway-led {
+  animation: warpGatePulse 1.5s ease-in-out infinite;
+}
+
+.gateway-led--top {
+  animation-delay: 0ms;
+}
+
+.gateway-led--right {
+  animation-delay: 375ms;
+}
+
+.gateway-led--bottom {
+  animation-delay: 750ms;
+}
+
+.gateway-led--left {
+  animation-delay: 1125ms;
+}
+
+.gateway-led--error {
+  animation: warpGateErrorBlink 0.4s ease-in-out infinite;
+}
+
+@keyframes warpGatePulse {
+
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes warpGateErrorBlink {
+
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+
+  50% {
+    opacity: 0.1;
+  }
+}
+
+.gateway-glow {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.gateway-glow--on {
+  opacity: 0.6;
+  animation: warpGateGlowPulse 2s ease-in-out infinite;
+}
+
+@keyframes warpGateGlowPulse {
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.gateway-led--sleeping {
+  animation: warpLedSleep 3s ease-in-out infinite;
+}
+
+@keyframes warpLedSleep {
+
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+
+  30% {
+    opacity: 0.2;
+  }
+
+  60% {
+    opacity: 0.1;
+  }
+}
+
+.warp-svg--sleeping .gateway-ring {
+  animation: warpGateRingSpin 6s linear infinite !important;
+  opacity: 0.5;
+}
+
+.warp-tunnel-lines {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  overflow: visible;
+}
+
+.warp-tunnel-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.08;
+  transition: opacity 0.4s ease;
+}
+
+.warp-tunnel-line--1 {
+  top: -4px;
+}
+
+.warp-tunnel-line--2 {
+  top: -2px;
+}
+
+.warp-tunnel-line--3 {
+  top: 0px;
+}
+
+.warp-tunnel-line--4 {
+  top: 2px;
+}
+
+.warp-tunnel-line--5 {
+  top: 4px;
+}
+
+.warp-tunnel-line--connecting {
+  opacity: 0.2;
+  animation: warpLineFlow 2s linear infinite;
+}
+
+.warp-tunnel-line--connected {
+  opacity: 0.35;
+  animation: warpLineFlow 1s linear infinite;
+}
+
+.warp-tunnel-line--error {
+  opacity: 0.15;
+  background: var(--error);
+  animation: warpLineDestabilize 0.3s ease-in-out infinite;
+}
+
+@keyframes warpLineFlow {
+  0% {
+    transform: scaleX(0.3);
+    transform-origin: left;
+  }
+
+  50% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  50.01% {
+    transform: scaleX(1);
+    transform-origin: right;
+  }
+
+  100% {
+    transform: scaleX(0.3);
+    transform-origin: right;
+  }
+}
+
+@keyframes warpLineDestabilize {
+
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: translateX(0);
+  }
+
+  25% {
+    opacity: 0.3;
+    transform: translateX(-1px);
+  }
+
+  75% {
+    opacity: 0.05;
+    transform: translateX(1px);
+  }
+}
+
+.warp-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.warp-particle--1 {
+  margin-top: -5px;
+  animation-delay: 0ms;
+}
+
+.warp-particle--2 {
+  margin-top: 0px;
+  animation-delay: 1200ms;
+}
+
+.warp-particle--3 {
+  margin-top: 5px;
+  animation-delay: 2400ms;
+}
+
+.warp-particle--idle {
+  width: 2px;
+  height: 2px;
+  animation: warpParticleIdle 4s ease-in-out infinite;
+}
+
+.warp-particle--connecting.warp-particle--1 {
+  animation-delay: 0ms;
+}
+
+.warp-particle--connecting.warp-particle--2 {
+  animation-delay: 500ms;
+}
+
+.warp-particle--connecting.warp-particle--3 {
+  animation-delay: 1000ms;
+}
+
+.warp-particle--connected.warp-particle--1 {
+  animation-delay: 0ms;
+}
+
+.warp-particle--connected.warp-particle--2 {
+  animation-delay: 200ms;
+}
+
+.warp-particle--connected.warp-particle--3 {
+  animation-delay: 400ms;
+}
+
+.warp-particle--error.warp-particle--1 {
+  animation-delay: 0ms;
+}
+
+.warp-particle--error.warp-particle--2 {
+  animation-delay: 150ms;
+}
+
+.warp-particle--error.warp-particle--3 {
+  animation-delay: 300ms;
+}
+
+.warp-particle--blocked.warp-particle--1 {
+  animation-delay: 0ms;
+}
+
+.warp-particle--blocked.warp-particle--2 {
+  animation-delay: 1000ms;
+}
+
+.warp-particle--blocked.warp-particle--3 {
+  animation-delay: 2000ms;
+}
+
+@keyframes warpParticleIdle {
+  0% {
+    left: 0%;
+    opacity: 0;
+    transform: translateY(0) scale(0.6);
+  }
+
+  5% {
+    opacity: 0.4;
+    transform: translateY(-1px) scale(1);
+  }
+
+  25% {
+    transform: translateY(1px) scale(0.8);
+  }
+
+  50% {
+    left: calc(var(--fly-end, 100%) * 0.5);
+    opacity: 0.3;
+    transform: translateY(-1px) scale(1.1);
+  }
+
+  75% {
+    transform: translateY(0.5px) scale(0.7);
+  }
+
+  95% {
+    opacity: 0.2;
+    transform: translateY(-0.5px) scale(0.9);
+  }
+
+  100% {
+    left: var(--fly-end, 100%);
+    opacity: 0;
+    transform: translateY(0) scale(0.6);
+  }
+}
+
+.warp-particle--idle.warp-particle--2 {
+  animation-name: warpParticleIdle2;
+}
+
+@keyframes warpParticleIdle2 {
+  0% {
+    left: 0%;
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+
+  5% {
+    opacity: 0.35;
+    transform: translateY(1px) scale(0.9);
+  }
+
+  30% {
+    transform: translateY(-1.5px) scale(1.05);
+  }
+
+  50% {
+    left: calc(var(--fly-end, 100%) * 0.5);
+    opacity: 0.25;
+    transform: translateY(0.5px) scale(0.85);
+  }
+
+  80% {
+    transform: translateY(-0.5px) scale(0.95);
+  }
+
+  100% {
+    left: var(--fly-end, 100%);
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+}
+
+.warp-particle--idle.warp-particle--3 {
+  animation-name: warpParticleIdle3;
+}
+
+@keyframes warpParticleIdle3 {
+  0% {
+    left: 0%;
+    opacity: 0;
+    transform: translateY(0) scale(0.7);
+  }
+
+  10% {
+    opacity: 0.3;
+    transform: translateY(-0.5px) scale(1.05);
+  }
+
+  35% {
+    transform: translateY(1.5px) scale(0.75);
+  }
+
+  55% {
+    left: calc(var(--fly-end, 100%) * 0.55);
+    opacity: 0.2;
+    transform: translateY(-1px) scale(0.9);
+  }
+
+  85% {
+    transform: translateY(0.5px) scale(0.8);
+  }
+
+  100% {
+    left: var(--fly-end, 100%);
+    opacity: 0;
+    transform: translateY(0) scale(0.7);
+  }
+}
+
+.warp-particle--connecting {
+  animation: warpParticleConnecting 1.5s ease-in-out infinite;
+}
+
+.warp-particle-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  opacity: 0.3;
+  animation: particleGlowPulse 0.8s ease-in-out infinite;
+}
+
+@keyframes particleGlowPulse {
+
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+@keyframes warpParticleConnecting {
+  0% {
+    left: 0%;
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  8% {
+    opacity: 0.9;
+    transform: scale(1.2);
+  }
+
+  15% {
+    transform: scale(0.9);
+  }
+
+  50% {
+    left: calc(var(--fly-end, 100%) * 0.5);
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+
+  85% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+
+  100% {
+    left: var(--fly-end, 100%);
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+.warp-particle--connected {
+  width: 4px;
+  height: 2px;
+  border-radius: 2px;
+  animation: warpParticleWarp 0.6s linear infinite;
+}
+
+.warp-particle-trail {
+  position: absolute;
+  top: 0;
+  right: 100%;
+  width: 12px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to left, var(--accent), transparent);
+  opacity: 0.5;
+  animation: trailFlicker 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes trailFlicker {
+  0% {
+    opacity: 0.3;
+    width: 10px;
+  }
+
+  100% {
+    opacity: 0.6;
+    width: 14px;
+  }
+}
+
+@keyframes warpParticleWarp {
+  0% {
+    left: 0%;
+    opacity: 0;
+    transform: scaleX(0.5) scaleY(1.5);
+  }
+
+  5% {
+    opacity: 1;
+    transform: scaleX(1.5) scaleY(0.8);
+  }
+
+  10% {
+    transform: scaleX(1.2) scaleY(1);
+  }
+
+  90% {
+    opacity: 0.9;
+    transform: scaleX(1.3) scaleY(1);
+  }
+
+  100% {
+    left: var(--fly-end, 100%);
+    opacity: 0;
+    transform: scaleX(0.5) scaleY(1.5);
+  }
+}
+
+.warp-particle--error {
+  background: var(--error);
+  animation: warpParticleError 0.8s ease-in-out infinite;
+}
+
+@keyframes warpParticleError {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(0deg);
+  }
+
+  25% {
+    opacity: 0.8;
+    transform: scale(1.3) rotate(45deg);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: scale(0.8) rotate(90deg);
+  }
+
+  75% {
+    opacity: 0.9;
+    transform: scale(1.5) rotate(135deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.3) rotate(180deg);
+  }
+}
+
+.warp-particle--blocked {
+  animation: warpParticleBlocked 3s ease-out infinite;
+}
+
+@keyframes warpParticleBlocked {
+  0% {
+    left: 0%;
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  8% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+
+  40% {
+    left: calc(var(--fly-peak, 50%) - 8%);
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  55% {
+    left: calc(var(--fly-peak, 50%) - 2%);
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+
+  65% {
+    left: var(--fly-peak, 50%);
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
+
+  72% {
+    left: calc(var(--fly-peak, 50%) - 4%);
+    opacity: 0.25;
+    transform: scale(0.5);
+  }
+
+  82% {
+    left: calc(var(--fly-peak, 50%) - 6%);
+    opacity: 0.1;
+    transform: scale(0.3);
+  }
+
+  100% {
+    left: calc(var(--fly-peak, 50%) - 7%);
+    opacity: 0;
+    transform: scale(0.1);
+  }
+}
+
+.warp-impact-flash {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: impactFlash 3s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes impactFlash {
+
+  0%,
+  55% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+
+  60% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+
+  65% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(2);
+  }
+
+  75% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.5);
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.warp-tunnel-line--unreachable {
+  opacity: 0.04;
+}
+
+.warp-tunnel-wall {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 2px;
+  height: 14px;
+  background: var(--text-tertiary);
+  opacity: 0.12;
+  border-radius: 1px;
+  animation: warpWallFlicker 3s ease-in-out infinite;
+}
+
+@keyframes warpWallFlicker {
+
+  0%,
+  100% {
+    opacity: 0.08;
+  }
+
+  50% {
+    opacity: 0.18;
+  }
+}
+
+.remote-beacon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.remote-beacon--active {
+  transform: scale(1.08);
+}
+
+.remote-beacon--searching {
+  transform: scale(1.02);
+}
+
+.beacon-breathe {
+  animation: warpBeaconBreathe 3s ease-in-out infinite;
+}
+
+@keyframes warpBeaconBreathe {
+
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.beacon-unit-flash {
+  animation: beaconUnitFlash 1s ease-in-out infinite;
+}
+
+.beacon-unit-flash--2 {
+  animation-delay: 300ms;
+}
+
+@keyframes beaconUnitFlash {
+
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.beacon-data-led {
+  animation: beaconDataLedPulse 0.8s ease-in-out infinite;
+}
+
+.beacon-data-led--2 {
+  animation-delay: 200ms;
+}
+
+.beacon-data-led--3 {
+  animation-delay: 100ms;
+}
+
+.beacon-data-led--4 {
+  animation-delay: 300ms;
+}
+
+@keyframes beaconDataLedPulse {
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.beacon-spark {
+  animation: beaconSparkBlink 0.4s ease-in-out infinite;
+}
+
+.beacon-spark--2 {
+  animation-delay: 150ms;
+}
+
+@keyframes beaconSparkBlink {
+
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(1.5);
+  }
+}
+
+.beacon-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--accent, #007AFF);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-light);
+  padding: 0 3px;
+  border-radius: 6px;
+  line-height: 14px;
+  opacity: 0.8;
+}
+
+.warp-crash-smoke {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  animation: warpSmoke 800ms ease-out both;
+  pointer-events: none;
+}
+
+.warp-crash-text {
+  position: absolute;
+  top: 100%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: var(--text-micro);
+  font-weight: 600;
+  color: var(--error);
+  background: var(--error-light);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  animation: warpCrashText 1800ms ease-out both;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes warpSmoke {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  30% {
+    transform: scale(1.5);
+    opacity: 0.4;
+  }
+
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+@keyframes warpCrashText {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  80% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-3px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-8px);
+  }
+}
+
+.warp-spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--error);
+  animation: warpSparkBlink 0.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes warpSparkBlink {
+
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+}
+
+[data-visual-style="immersive"] .warp-tunnel-bar {
+  filter: drop-shadow(0 0 4px var(--accent-glow));
+}
+
+[data-visual-style="immersive"] .warp-speech {
+  background: color-mix(in srgb, var(--accent) 15%, var(--bg-elevated));
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+[data-visual-style="immersive"] .local-gateway--active svg circle {
+  stroke: var(--accent);
+}
+
+[data-visual-style="immersive"] .remote-beacon--active svg rect {
+  stroke: var(--accent);
+  stroke-width: 0.5;
+}
+
+[data-visual-style="immersive"] .warp-tunnel-line--connected {
+  opacity: 0.5;
+  filter: drop-shadow(0 0 2px var(--accent-glow));
+}
+
+[data-visual-style="immersive"] .warp-particle--connected {
+  filter: drop-shadow(0 0 3px var(--accent-glow));
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .warp-signal-bob--active,
+  .warp-signal-bob--sleeping,
+  .gateway-ring--spinning,
+  .gateway-ring--fast,
+  .gateway-led,
+  .gateway-led--error,
+  .gateway-glow--on,
+  .gateway-led--sleeping,
+  .warp-tunnel-line--connecting,
+  .warp-tunnel-line--connected,
+  .warp-tunnel-line--error,
+  .warp-particle--idle,
+  .warp-particle--connecting,
+  .warp-particle--connected,
+  .warp-particle--error,
+  .warp-particle--blocked,
+  .warp-particle-trail,
+  .warp-particle-glow,
+  .warp-impact-flash,
+  .beacon-breathe,
+  .beacon-unit-flash,
+  .beacon-data-led,
+  .beacon-spark,
+  .warp-tunnel-wall {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+[data-performance-tier="2"] {
+  .warp-signal-bob--active {
+    animation-duration: 4s;
+  }
+
+  .warp-signal-bob--sleeping {
+    animation-duration: 4s;
+  }
+
+  .gateway-ring--spinning {
+    animation-duration: 5s;
+  }
+
+  .gateway-ring--fast {
+    animation-duration: 2s;
+  }
+
+  .gateway-led {
+    animation-duration: 3s;
+  }
+
+  .warp-tunnel-line--connecting {
+    animation-duration: 3s;
+  }
+
+  .warp-tunnel-line--connected {
+    animation-duration: 1.5s;
+  }
+
+  .warp-particle--connecting {
+    animation-duration: 2.5s;
+  }
+
+  .warp-particle--connected {
+    animation-duration: 1s;
+  }
+
+  .beacon-unit-flash {
+    animation-duration: 2s;
+  }
+
+  .beacon-data-led {
+    animation-duration: 1.5s;
+  }
+
+  .beacon-breathe {
+    animation-duration: 5s;
+  }
+
+  .warp-particle--blocked {
+    animation-duration: 5s;
+  }
+
+  .warp-impact-flash {
+    animation-duration: 5s;
+  }
+
+  .warp-particle-trail {
+    animation-duration: 0.5s;
+  }
+
+  .warp-particle-glow {
+    animation-duration: 1.5s;
+  }
+
+  .warp-tunnel-wall {
+    animation-duration: 5s;
+  }
+}
+
+[data-performance-tier="3"] {
+
+  .warp-signal-bob--active,
+  .warp-signal-bob--sleeping,
+  .gateway-ring--spinning,
+  .gateway-ring--fast,
+  .gateway-led,
+  .gateway-led--error,
+  .gateway-glow--on,
+  .gateway-led--sleeping,
+  .warp-tunnel-line--connecting,
+  .warp-tunnel-line--connected,
+  .warp-tunnel-line--error,
+  .warp-particle--idle,
+  .warp-particle--connecting,
+  .warp-particle--connected,
+  .warp-particle--error,
+  .warp-particle--blocked,
+  .warp-particle-trail,
+  .warp-particle-glow,
+  .warp-impact-flash,
+  .beacon-breathe,
+  .beacon-unit-flash,
+  .beacon-data-led,
+  .beacon-spark,
+  .warp-tunnel-wall {
+    animation: none !important;
+  }
+
+  [data-visual-style="immersive"] .warp-tunnel-bar {
+    filter: none !important;
+  }
+}

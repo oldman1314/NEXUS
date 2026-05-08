@@ -1,0 +1,6 @@
+- [x] Classic 模式下 GET badge 左边缘与 main-content 左边界对齐
+- [x] Immersive 模式下 GET badge 左边缘与 main-content 左边界对齐
+- [x] Sidebar 折叠状态下 GET badge 左边缘与 main-content 左边界对齐
+- [x] AppMenu 宽度与 sidebar 总占用宽度一致（含 border 和 margin）
+- [x] ContextArea 无左侧 padding，GET badge 紧贴 AppMenu 右边缘
+- [x] TypeScript 编译无新增错误

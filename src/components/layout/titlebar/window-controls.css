@@ -1,0 +1,44 @@
+.window-controls {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 6px;
+  padding: 0 10px;
+}
+
+.window-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--text-secondary);
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 180ms var(--ease-out-quart),
+    color 180ms var(--ease-out-quart),
+    transform 120ms var(--ease-out-quart);
+}
+
+.window-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  transform: scale(1.08);
+}
+
+.window-btn:active {
+  transform: scale(0.95);
+}
+
+.window-btn.close:hover {
+  background: var(--error);
+  color: var(--text-inverse);
+  transform: scale(1.08);
+}
+
+.window-btn.close:active {
+  background: var(--error-hover);
+  transform: scale(0.95);
+}

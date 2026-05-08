@@ -1,0 +1,206 @@
+.sidebar-section-collections {
+  flex: 2;
+  min-height: 120px;
+}
+
+.collection-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.collection-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 6px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out-quart);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  position: relative;
+}
+
+.collection-header:hover {
+  background: var(--bg-hover);
+}
+
+.collection-header.selected {
+  background: var(--bg-active);
+  color: var(--accent);
+}
+
+.collection-header.selected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  border-radius: var(--radius-xs);
+  background: var(--accent);
+  animation: scaleIn var(--duration-fast) var(--ease-spring) both;
+}
+
+.collection-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.collection-request-count {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  font-weight: 500;
+  margin-left: 4px;
+  flex-shrink: 0;
+}
+
+.collection-requests {
+  display: flex;
+  flex-direction: column;
+  padding-left: 8px;
+}
+
+.request-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out-quart),
+    transform var(--duration-fast) var(--ease-out-quart);
+  font-size: var(--text-sm);
+  position: relative;
+}
+
+.request-item:hover {
+  background: var(--bg-hover);
+  transform: translateX(2px);
+}
+
+.request-item.selected {
+  background: var(--bg-active);
+}
+
+.request-item.selected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 12px;
+  border-radius: var(--radius-xs);
+  background: var(--accent);
+}
+
+.request-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  color: var(--text-secondary);
+}
+
+.request-item:hover .request-name,
+.request-item.selected .request-name {
+  color: var(--text-primary);
+}
+
+.delete-btn,
+.copy-btn {
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out-quart),
+    color var(--duration-fast) var(--ease-out-quart),
+    background-color var(--duration-fast) var(--ease-out-quart);
+}
+
+.collection-header:hover .delete-btn,
+.request-item:hover .delete-btn,
+.request-item:hover .copy-btn {
+  opacity: 1;
+}
+
+.delete-btn:hover {
+  color: var(--error);
+  background: var(--error-light);
+}
+
+.copy-btn:hover {
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+.collection-header.dragging {
+  opacity: 0.5;
+  background: var(--bg-active);
+}
+
+.request-item.dragging {
+  opacity: 0.5;
+  background: var(--bg-active);
+}
+
+.collection-header.drag-over {
+  border-top: 2px solid var(--accent);
+}
+
+.request-item.drag-over {
+  border-top: 2px solid var(--accent);
+}
+
+.drag-placeholder {
+  background: var(--accent-light);
+  border-radius: var(--radius-sm);
+  opacity: 0.5;
+}
+
+.paste-request-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  margin: 2px 0;
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out-quart),
+    color var(--duration-fast) var(--ease-out-quart);
+  width: 100%;
+}
+
+.paste-request-btn:hover {
+  background: var(--bg-hover);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+[data-visual-style="immersive"] .request-item {
+  position: relative;
+}
+
+[data-visual-style="immersive"] .request-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: var(--method-color, var(--accent));
+  transition: width var(--duration-fast) var(--ease-out-expo);
+  border-radius: 0 2px 2px 0;
+}
+
+[data-visual-style="immersive"] .request-item:hover::before {
+  width: 3px;
+}
