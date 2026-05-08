@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Send, FileCode, Sliders, List, FileText, Lock, Play, CheckSquare, ClipboardPaste, OctagonX, Code, Save } from 'lucide-react'
+import { Sliders, List, FileText, Lock, Play, CheckSquare } from 'lucide-react'
 import { useRequestStore } from '@/stores/useRequestStore'
 import { useUIStore } from '@/stores/useUIStore'
 import { useAppStore } from '@/stores/useAppStore'
 import { toast } from '@/stores/useToastStore'
 import Tooltip from '@/components/common/Tooltip'
-import { defaultTemplates } from '@/utils/request-templates'
 import { parseCurl } from '@/utils/curl'
 import ResponsePanel from './ResponsePanel'
-import MethodSelect from './MethodSelect'
 import TabBar from './TabBar'
 import WelcomePage from './WelcomePage'
 import ParamsTab from '@/components/tabs/ParamsTab'
@@ -17,12 +15,13 @@ import BodyTab from '@/components/tabs/BodyTab'
 import AuthTab from '@/components/tabs/AuthTab'
 import PreScriptTab from '@/components/tabs/PreScriptTab'
 import TestsTab from '@/components/tabs/TestsTab'
-import type { RequestData } from '@/types'
+import type { RequestData, HttpMethod } from '@/types'
 import { useAnimationStore } from '@/stores/useAnimationStore'
 import { useRequestSender } from '@/hooks/useRequestSender'
+import UrlBar from './request/UrlBar'
+import RequestToolbar from './request/RequestToolbar'
+import ResponsePlaceholder from './request/ResponsePlaceholder'
 import './request-view.css'
-
-import { METHOD_COLORS } from '@/constants/http'
 
 type TabKey = 'params' | 'headers' | 'body' | 'auth' | 'preScript' | 'tests'
 
@@ -129,7 +128,6 @@ export default function RequestView() {
   useEffect(() => {
     if (!isDragging) return
     let rafId: number
-
     const handleMouseMove = (e: MouseEvent) => {
       cancelAnimationFrame(rafId)
       rafId = requestAnimationFrame(() => {
@@ -168,7 +166,6 @@ export default function RequestView() {
     if (!isHDragging) return
     let rafId: number
     const requestPanel = document.querySelector('.request-panel') as HTMLElement | null
-
     const handleMouseMove = (e: MouseEvent) => {
       cancelAnimationFrame(rafId)
       rafId = requestAnimationFrame(() => {
@@ -325,105 +322,36 @@ export default function RequestView() {
       <TabBar />
       <div className="request-toolbar">
         <div className="url-bar">
-          <div className={`url-bar-signal ${requestStatus !== 'pending' && urlFlash !== 'success' && urlFlash !== 'error' ? 'url-bar-signal--idle' : ''} ${urlFlash === 'success' ? 'url-flash-success' : urlFlash === 'error' ? 'url-flash-error' : ''}`}>
-            <div className="method-color-band" style={{ background: METHOD_COLORS[displayRequest.method].color }} />
-            {requestStatus === 'pending' && <div className="launch-sweep" />}
-            {urlFlash === 'success' && <div className="complete-sweep" />}
-            {urlFlash === 'error' && <div className="error-sweep" />}
-            <MethodSelect
-              value={displayRequest.method}
-              onChange={(method) => {
-                setDisplayRequest((prev) => prev ? { ...prev, method } : prev)
-                updateActiveRequest({ method })
-              }}
-            />
-            <span
-              className={`request-dirty-dot ${isDirty ? 'dirty' : 'clean'}`}
-              title={isDirty ? 'Unsaved changes' : 'Saved'}
-            />
-            {activeEnv?.baseUrl && activeEnv.baseUrlEnabled !== false && displayRequest.url && !/^https?:\/\//i.test(displayRequest.url) && !/\{\{\s*base_url\s*\}\}/i.test(displayRequest.url) && (
-              <span className="url-base-prefix">{activeEnv.baseUrl.replace(/\/$/, '')}</span>
-            )}
-            <input
-              className="url-input"
-              type="text"
-              placeholder="Enter request URL"
-              value={displayRequest.url}
-              onChange={(e) => handleUrlChange(e.target.value)}
-            />
-            {requestStatus === 'pending' ? (
-              <button className="cancel-btn" onClick={handleCancel} title="Cancel request">
-                <OctagonX size={14} />
-              </button>
-            ) : (
-              <button className="send-btn" onClick={handleSend} title="Send request">
-                <Send size={14} />
-              </button>
-            )}
-          </div>
-          <div className="url-bar-tools">
-            {activeCollectionId && (
-              <Tooltip content="Save Request" shortcut="⌘S">
-                <button
-                  className={`save-btn ${isDirty ? 'save-btn-dirty' : ''}`}
-                  onClick={handleSaveRequest}
-                  disabled={!isDirty}
-                >
-                  <Save size={14} />
-                </button>
-              </Tooltip>
-            )}
-            <Tooltip content="Templates">
-              <button className="save-btn" onClick={() => setShowTemplates(!showTemplates)}>
-                <FileCode size={14} />
-              </button>
-            </Tooltip>
-            <Tooltip content="Import cURL">
-              <button className="save-btn" onClick={() => setCurlImportOpen(!curlImportOpen)}>
-                <ClipboardPaste size={14} />
-              </button>
-            </Tooltip>
-            <Tooltip content="Generate Code" shortcut="⇧⌘G">
-              <button className="save-btn" onClick={() => setCodeGenOpen(true)}>
-                <Code size={14} />
-              </button>
-            </Tooltip>
-          </div>
-
-          {showTemplates && (
-            <div className="templates-dropdown">
-              {defaultTemplates.map((t) => (
-                <div
-                  key={t.id}
-                  className="template-item"
-                  onClick={() => handleLoadTemplate(t.request)}
-                >
-                  <span className="template-name">{t.name}</span>
-                  <span className="template-desc">{t.description}</span>
-                </div>
-              ))}
-            </div>
-          )}
-          {curlImportOpen && (
-            <div className="curl-import-dropdown">
-              <div className="curl-import-header">Import from cURL</div>
-              <textarea
-                className="curl-import-textarea"
-                placeholder="Paste cURL command here..."
-                value={curlInput}
-                onChange={(e) => setCurlInput(e.target.value)}
-              />
-              <div className="curl-import-footer">
-                <button
-                  className="btn-primary"
-                  onClick={handleCurlImport}
-                  disabled={!curlInput.trim()}
-                >
-                  Import
-                </button>
-              </div>
-            </div>
-          )}
+          <UrlBar
+            method={displayRequest.method}
+            url={displayRequest.url}
+            requestStatus={requestStatus}
+            urlFlash={urlFlash}
+            isDirty={isDirty}
+            baseUrl={activeEnv?.baseUrl}
+            baseUrlEnabled={activeEnv?.baseUrlEnabled}
+            onMethodChange={(method: HttpMethod) => {
+              setDisplayRequest((prev) => prev ? { ...prev, method } : prev)
+              updateActiveRequest({ method })
+            }}
+            onUrlChange={handleUrlChange}
+            onSend={handleSend}
+            onCancel={handleCancel}
+          />
+          <RequestToolbar
+            isDirty={isDirty}
+            activeCollectionId={activeCollectionId}
+            showTemplates={showTemplates}
+            curlImportOpen={curlImportOpen}
+            curlInput={curlInput}
+            onCurlInputChange={setCurlInput}
+            onSave={handleSaveRequest}
+            onToggleTemplates={() => setShowTemplates(!showTemplates)}
+            onToggleCurlImport={() => setCurlImportOpen(!curlImportOpen)}
+            onLoadTemplate={handleLoadTemplate}
+            onCurlImport={handleCurlImport}
+            onCodeGen={() => setCodeGenOpen(true)}
+          />
         </div>
         <div className={`request-progress-bar ${requestStatus === 'pending' ? 'visible' : ''}`}><div className="request-progress-indeterminate" /></div>
       </div>
@@ -501,18 +429,7 @@ export default function RequestView() {
               onCopyResponse={handleCopyResponse}
             />
           ) : (
-            <div className="empty-response">
-              <svg className="empty-response-illustration" width="64" height="64" viewBox="0 0 64 64" fill="none">
-                <path d="M8 28L56 8L36 56L28 36L8 28Z" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinejoin="round" fill="none" opacity="0.3" />
-                <path d="M8 28L56 8L28 36" stroke="var(--accent)" strokeWidth="2" strokeLinejoin="round" fill="none" className="paper-plane-path" />
-                <circle className="signal-ripple signal-ripple-1" cx="32" cy="32" r="8" stroke="var(--accent)" strokeWidth="1" fill="none" opacity="0" />
-                <circle className="signal-ripple signal-ripple-2" cx="32" cy="32" r="16" stroke="var(--accent)" strokeWidth="1" fill="none" opacity="0" />
-                <circle className="signal-ripple signal-ripple-3" cx="32" cy="32" r="24" stroke="var(--accent)" strokeWidth="1" fill="none" opacity="0" />
-              </svg>
-              <p className="empty-response-title">Send a request to see the response</p>
-              <p className="empty-response-hint">Enter a URL above and click Send</p>
-              <kbd className="empty-response-shortcut">Ctrl + Enter</kbd>
-            </div>
+            <ResponsePlaceholder />
           )}
         </div>
       </div>

@@ -34,7 +34,13 @@ export default function SidebarWorkflows() {
         ) : (
           workflows.map((wf) => (
             <div key={wf.id} className={`workflow-item${wf.id === activeWorkflowId ? ' active' : ''}`}>
-              <button className="workflow-item-header" onClick={() => { setView('workflow'); setActiveWorkflowId(wf.id) }}>
+              <div
+                className="workflow-item-header"
+                role="button"
+                tabIndex={0}
+                onClick={() => { setView('workflow'); setActiveWorkflowId(wf.id) }}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setView('workflow'); setActiveWorkflowId(wf.id) } }}
+              >
                 <ChevronRight size={12} className="workflow-chevron" />
                 <GitBranch size={14} className="workflow-icon" />
                 <span className="workflow-name">{wf.name}</span>{' '}
@@ -54,7 +60,7 @@ export default function SidebarWorkflows() {
                     </button>
                   </Tooltip>
                 </div>
-              </button>
+              </div>
               {wf.description && (
                 <span className="workflow-desc">{wf.description}</span>
               )}

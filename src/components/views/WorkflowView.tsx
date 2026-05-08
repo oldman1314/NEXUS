@@ -13,131 +13,23 @@ import {
   type ReactFlowInstance,
   type OnNodesChange,
   type OnEdgesChange,
-  Panel,
-  BaseEdge,
-  getBezierPath,
-  type EdgeProps,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
-import { Play, Save, GitBranch, ArrowRight, Code, Zap, LogOut, FolderOpen, Trash2, ChevronDown, ChevronRight } from 'lucide-react'
 import { useAppStore } from '@/stores/useAppStore'
 import { toast } from '@/stores/useToastStore'
 import { useWorkflowAnimationStore, type WorkflowAnimationState } from '@/stores/useWorkflowAnimationStore'
-import RocketIcon from '@/components/common/RocketIcon'
 import { executeWorkflow } from '@/utils/workflow-engine'
 import { validateWorkflow } from '@/utils/workflow-validation'
 import type { WorkflowLog, Workflow } from '@/types'
-import StartNode from '@/components/workflow/StartNode'
-import ApiNode from '@/components/workflow/ApiNode'
-import ConditionNode from '@/components/workflow/ConditionNode'
-import TransformNode from '@/components/workflow/TransformNode'
-import OutputNode from '@/components/workflow/OutputNode'
 import NodeConfigPanel from '@/components/workflow/NodeConfigPanel'
 import WorkflowLogs from '@/components/workflow/WorkflowLogs'
+import { nodeTypes, edgeTypes, TEMPLATES } from './workflow-editor/WorkflowUtils'
+import WorkflowToolbar from './workflow-editor/WorkflowToolbar'
+import NodePalette from './workflow-editor/NodePalette'
+import SaveWorkflowDialog from './workflow-editor/SaveWorkflowDialog'
+import EmptyCanvasGuide from './workflow-editor/EmptyCanvasGuide'
 import './workflow-view.css'
 import '../workflow/workflow-nodes.css'
-
-const nodeTypes = {
-  start: StartNode,
-  api: ApiNode,
-  condition: ConditionNode,
-  transform: TransformNode,
-  output: OutputNode,
-}
-
-function AnimatedEdge({
-  id,
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-  sourcePosition,
-  targetPosition,
-  style = {},
-  markerEnd,
-}: EdgeProps) {
-  const [edgePath] = getBezierPath({
-    sourceX,
-    sourceY,
-    sourcePosition,
-    targetX,
-    targetY,
-    targetPosition,
-  })
-
-  return (
-    <BaseEdge
-      id={id}
-      path={edgePath}
-      markerEnd={markerEnd}
-      style={{ ...style, stroke: 'var(--accent)', strokeWidth: 2 }}
-      className="animated-edge"
-    />
-  )
-}
-
-const edgeTypes = {
-  animated: AnimatedEdge,
-}
-
-const TEMPLATES = [
-  {
-    name: 'API Chain',
-    create: () => {
-      const nodes = [
-        { id: 'start_0', type: 'start', position: { x: 250, y: 50 }, data: { label: 'Start' } },
-        { id: 'api_0', type: 'api', position: { x: 250, y: 180 }, data: { label: 'API', method: 'GET', url: '', headers: [], params: [], bodyType: 'none', bodyRaw: '' } },
-        { id: 'api_1', type: 'api', position: { x: 250, y: 310 }, data: { label: 'API', method: 'GET', url: '', headers: [], params: [], bodyType: 'none', bodyRaw: '' } },
-        { id: 'output_0', type: 'output', position: { x: 250, y: 440 }, data: { label: 'Output', format: 'json' } },
-      ]
-      const edges = [
-        { id: 'e_start_api0', source: 'start_0', target: 'api_0', animated: true },
-        { id: 'e_api0_api1', source: 'api_0', target: 'api_1', animated: true },
-        { id: 'e_api1_output0', source: 'api_1', target: 'output_0', animated: true },
-      ]
-      return { nodes, edges }
-    },
-  },
-  {
-    name: 'Conditional Branch',
-    create: () => {
-      const nodes = [
-        { id: 'start_0', type: 'start', position: { x: 300, y: 50 }, data: { label: 'Start' } },
-        { id: 'api_0', type: 'api', position: { x: 300, y: 180 }, data: { label: 'API', method: 'GET', url: '', headers: [], params: [], bodyType: 'none', bodyRaw: '' } },
-        { id: 'cond_0', type: 'condition', position: { x: 300, y: 310 }, data: { label: 'Condition', expression: '{{prev.status}} === 200' } },
-        { id: 'api_1', type: 'api', position: { x: 120, y: 440 }, data: { label: 'API', method: 'GET', url: '', headers: [], params: [], bodyType: 'none', bodyRaw: '' } },
-        { id: 'transform_0', type: 'transform', position: { x: 480, y: 440 }, data: { label: 'Transform', script: 'return input;' } },
-        { id: 'output_0', type: 'output', position: { x: 300, y: 570 }, data: { label: 'Output', format: 'json' } },
-      ]
-      const edges = [
-        { id: 'e_start_api0', source: 'start_0', target: 'api_0', animated: true },
-        { id: 'e_api0_cond0', source: 'api_0', target: 'cond_0', animated: true },
-        { id: 'e_cond0_api1', source: 'cond_0', target: 'api_1', sourceHandle: 'true', animated: true, label: 'True' },
-        { id: 'e_cond0_transform0', source: 'cond_0', target: 'transform_0', sourceHandle: 'false', animated: true, label: 'False' },
-        { id: 'e_api1_output0', source: 'api_1', target: 'output_0', animated: true },
-        { id: 'e_transform0_output0', source: 'transform_0', target: 'output_0', animated: true },
-      ]
-      return { nodes, edges }
-    },
-  },
-  {
-    name: 'Data Pipeline',
-    create: () => {
-      const nodes = [
-        { id: 'start_0', type: 'start', position: { x: 250, y: 50 }, data: { label: 'Start' } },
-        { id: 'api_0', type: 'api', position: { x: 250, y: 180 }, data: { label: 'API', method: 'GET', url: '', headers: [], params: [], bodyType: 'none', bodyRaw: '' } },
-        { id: 'transform_0', type: 'transform', position: { x: 250, y: 310 }, data: { label: 'Transform', script: 'return input;' } },
-        { id: 'output_0', type: 'output', position: { x: 250, y: 440 }, data: { label: 'Output', format: 'json' } },
-      ]
-      const edges = [
-        { id: 'e_start_api0', source: 'start_0', target: 'api_0', animated: true },
-        { id: 'e_api0_transform0', source: 'api_0', target: 'transform_0', animated: true },
-        { id: 'e_transform0_output0', source: 'transform_0', target: 'output_0', animated: true },
-      ]
-      return { nodes, edges }
-    },
-  },
-]
 
 export default function WorkflowView() {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([])
@@ -247,30 +139,13 @@ export default function WorkflowView() {
     let data: Record<string, unknown> = baseData
 
     if (type === 'api') {
-      data = {
-        ...baseData,
-        method: 'GET',
-        url: '',
-        headers: [],
-        params: [],
-        bodyType: 'none',
-        bodyRaw: '',
-      }
+      data = { ...baseData, method: 'GET', url: '', headers: [], params: [], bodyType: 'none', bodyRaw: '' }
     } else if (type === 'condition') {
-      data = {
-        ...baseData,
-        expression: '{{prev.status}} === 200',
-      }
+      data = { ...baseData, expression: '{{prev.status}} === 200' }
     } else if (type === 'transform') {
-      data = {
-        ...baseData,
-        script: 'return input;',
-      }
+      data = { ...baseData, script: 'return input;' }
     } else if (type === 'output') {
-      data = {
-        ...baseData,
-        format: 'json',
-      }
+      data = { ...baseData, format: 'json' }
     }
 
     setNodes((nds) => [...nds, { id, type, position: nodePosition, data }])
@@ -438,10 +313,6 @@ export default function WorkflowView() {
     setIsDirty(false)
   }, [saveDialogName, saveDialogDescription, performSave])
 
-  const handleSaveDialogCancel = useCallback(() => {
-    setShowSaveDialog(false)
-  }, [])
-
   const handleLoadWorkflow = useCallback((workflow: Workflow) => {
     if (!confirmDiscard()) return
     setLogs([])
@@ -489,15 +360,12 @@ export default function WorkflowView() {
 
   const onDrop = useCallback((event: React.DragEvent) => {
     event.preventDefault()
-
     const nodeType = event.dataTransfer.getData('application/reactflow')
     if (!nodeType || !rfInstance) return
-
     const position = rfInstance.screenToFlowPosition({
       x: event.clientX,
       y: event.clientY,
     })
-
     addNode(nodeType, position)
   }, [rfInstance, addNode])
 
@@ -614,145 +482,29 @@ export default function WorkflowView() {
 
   return (
     <div className="workflow-view" ref={containerRef} tabIndex={0}>
-      <div className="workflow-toolbar">
-        <div className="toolbar-left">
-          <h2>Workflow Editor</h2>
-          <span className="workflow-count">{nodes.length} nodes</span>
-          {activeWorkflowId && (
-            <span className="workflow-active-name">
-              {currentWorkflowName}
-            </span>
-          )}
-        </div>
-        <div className="toolbar-right">
-          <button className="toolbar-btn" onClick={handleNewWorkflow}>
-            <FolderOpen size={14} />
-            New
-          </button>
-          <button
-            className="toolbar-btn"
-            onClick={(e) => handleSaveWorkflow(e.shiftKey)}
-            disabled={nodes.length === 0}
-          >
-            <Save size={14} />
-            Save
-          </button>
-          <button
-            className="toolbar-btn"
-            onClick={() => handleSaveWorkflow(true)}
-            disabled={nodes.length === 0}
-          >
-            <Save size={14} />
-            Save As
-          </button>
-          {isRunning ? (
-            <button
-              className="toolbar-btn stop-btn"
-              onClick={handleStopWorkflow}
-            >
-              <Zap size={14} />
-              Stop
-            </button>
-          ) : (
-            <button
-              className="toolbar-btn run-btn"
-              onClick={handleRun}
-              disabled={nodes.length === 0}
-            >
-              <Play size={14} />
-              Run
-              <RocketIcon size={48} state={rocketState} />
-            </button>
-          )}
-        </div>
-      </div>
+      <WorkflowToolbar
+        nodeCount={nodes.length}
+        isRunning={isRunning}
+        rocketState={rocketState}
+        activeWorkflowName={currentWorkflowName ?? null}
+        onNew={handleNewWorkflow}
+        onSave={handleSaveWorkflow}
+        onRun={handleRun}
+        onStop={handleStopWorkflow}
+      />
 
       <div className="workflow-canvas-wrapper">
-        <div className="node-palette">
-          <div className="palette-title">Nodes</div>
-          <button
-            className="palette-item"
-            onClick={() => addNode('start')}
-            draggable
-            onDragStart={(e) => onDragStart(e, 'start')}
-          >
-            <Zap size={14} className="palette-icon start" />
-            <span>Start</span>
-          </button>
-          <button
-            className="palette-item"
-            onClick={() => addNode('api')}
-            draggable
-            onDragStart={(e) => onDragStart(e, 'api')}
-          >
-            <ArrowRight size={14} className="palette-icon api" />
-            <span>API Request</span>
-          </button>
-          <button
-            className="palette-item"
-            onClick={() => addNode('condition')}
-            draggable
-            onDragStart={(e) => onDragStart(e, 'condition')}
-          >
-            <GitBranch size={14} className="palette-icon condition" />
-            <span>Condition</span>
-          </button>
-          <button
-            className="palette-item"
-            onClick={() => addNode('transform')}
-            draggable
-            onDragStart={(e) => onDragStart(e, 'transform')}
-          >
-            <Code size={14} className="palette-icon transform" />
-            <span>Transform</span>
-          </button>
-          <button
-            className="palette-item"
-            onClick={() => addNode('output')}
-            draggable
-            onDragStart={(e) => onDragStart(e, 'output')}
-          >
-            <LogOut size={14} className="palette-icon output" />
-            <span>Output</span>
-          </button>
-
-          <div className="palette-divider" />
-
-          <div className="palette-title saved-title" onClick={() => setShowSaved(!showSaved)}>
-            {showSaved ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
-            Saved Workflows
-            <span className="saved-count">{workflows.length}</span>
-          </div>
-          {showSaved && (
-            <div className="saved-workflows">
-              {workflows.length === 0 && (
-                <div className="saved-empty">No saved workflows</div>
-              )}
-              {workflows.map((wf) => (
-                <div
-                  key={wf.id}
-                  className={`saved-item ${activeWorkflowId === wf.id ? 'active' : ''}`}
-                  onClick={() => handleLoadWorkflow(wf)}
-                >
-                  <FolderOpen size={12} />
-                  <span className="saved-name">{wf.name}</span>
-                  <button
-                    className="saved-delete"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      deleteWorkflow(wf.id)
-                      if (activeWorkflowId === wf.id) {
-                        handleNewWorkflow()
-                      }
-                    }}
-                  >
-                    <Trash2 size={10} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <NodePalette
+          showSaved={showSaved}
+          workflows={workflows}
+          activeWorkflowId={activeWorkflowId}
+          onAddNode={addNode}
+          onDragStart={onDragStart}
+          onToggleSaved={() => setShowSaved(!showSaved)}
+          onLoadWorkflow={handleLoadWorkflow}
+          onDeleteWorkflow={deleteWorkflow}
+          onNewWorkflow={handleNewWorkflow}
+        />
 
         <div className="reactflow-wrapper" onDragOver={onDragOver} onDrop={onDrop}>
           <ReactFlow
@@ -774,53 +526,18 @@ export default function WorkflowView() {
             <MiniMap
               nodeColor={(node) => {
                 switch (node.type) {
-                  case 'start':
-                    return '#34c759'
-                  case 'api':
-                    return '#007aff'
-                  case 'condition':
-                    return '#ff9500'
-                  case 'transform':
-                    return '#af52de'
-                  case 'output':
-                    return '#5856d6'
-                  default:
-                    return '#86868b'
+                  case 'start': return '#34c759'
+                  case 'api': return '#007aff'
+                  case 'condition': return '#ff9500'
+                  case 'transform': return '#af52de'
+                  case 'output': return '#5856d6'
+                  default: return '#86868b'
                 }
               }}
               maskColor="var(--bg-modal)"
             />
-            <Panel position="top-right">
-              <button
-                className="logs-toggle"
-                onClick={() => setShowLogs(!showLogs)}
-              >
-                {showLogs ? 'Hide' : 'Show'} Logs
-                {logs.length > 0 && <span className="logs-badge">{logs.length}</span>}
-              </button>
-            </Panel>
             {nodes.length === 0 && (
-              <Panel position="top-center">
-                <div className="empty-canvas-guide">
-                  <div className="empty-guide-icon">
-                    <GitBranch size={48} strokeWidth={1.2} />
-                  </div>
-                  <div className="empty-guide-title">Start Building Your Workflow</div>
-                  <div className="empty-guide-subtitle">Drag nodes from the palette or click to add them</div>
-                  <button className="empty-guide-action" onClick={() => addNode('start')}>
-                    <Zap size={16} />
-                    Add Start Node
-                  </button>
-                  <div className="template-section">
-                    <div className="template-section-title">Templates</div>
-                    {TEMPLATES.map((t, i) => (
-                      <button key={t.name} className="template-item" onClick={() => handleTemplate(i)}>
-                        {t.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </Panel>
+              <EmptyCanvasGuide onAddNode={addNode} onTemplate={handleTemplate} />
             )}
           </ReactFlow>
         </div>
@@ -838,31 +555,14 @@ export default function WorkflowView() {
       {showLogs && <WorkflowLogs logs={logs} onClose={() => setShowLogs(false)} height={logsHeight} onHeightChange={setLogsHeight} />}
 
       {showSaveDialog && (
-        <div className="save-workflow-overlay" onClick={handleSaveDialogCancel}>
-          <div className="save-workflow-dialog" onClick={(e) => e.stopPropagation()}>
-            <h3>Save Workflow</h3>
-            <input
-              type="text"
-              placeholder="Workflow name"
-              value={saveDialogName}
-              onChange={(e) => setSaveDialogName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleSaveDialogConfirm()
-              }}
-              autoFocus
-            />
-            <textarea
-              placeholder="Description (optional)"
-              value={saveDialogDescription}
-              onChange={(e) => setSaveDialogDescription(e.target.value)}
-              rows={3}
-            />
-            <div className="dialog-actions">
-              <button className="dialog-btn" onClick={handleSaveDialogCancel}>Cancel</button>
-              <button className="dialog-btn-primary" onClick={handleSaveDialogConfirm} disabled={!saveDialogName.trim()}>Save</button>
-            </div>
-          </div>
-        </div>
+        <SaveWorkflowDialog
+          name={saveDialogName}
+          description={saveDialogDescription}
+          onNameChange={setSaveDialogName}
+          onDescriptionChange={setSaveDialogDescription}
+          onConfirm={handleSaveDialogConfirm}
+          onCancel={() => setShowSaveDialog(false)}
+        />
       )}
     </div>
   )

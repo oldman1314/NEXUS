@@ -66,7 +66,7 @@ function syncActiveFromTab(tab: RequestTab): Partial<RequestState> {
 }
 
 export const useRequestStore = create<RequestState>()((set, get) => ({
-  activeRequest: { ...defaultRequest },
+  activeRequest: null,
   setActiveRequest: (request) => {
     const currentTab = get().tabs.find((t) => t.id === get().activeTabId)
     if (currentTab && request) {

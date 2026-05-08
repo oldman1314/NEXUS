@@ -197,3 +197,68 @@ class PerformanceProfiler {
 
 export const perfProfiler = new PerformanceProfiler()
 export default perfProfiler
+
+interface ComponentRenderStat {
+  name: string
+  count: number
+  avgMs: number
+  maxMs: number
+  minMs: number
+  totalMs: number
+}
+
+class ComponentRenderTracker {
+  private renderTimes = new Map<string, number[]>()
+
+  trackRender(name: string): () => void {
+    const start = performance.now()
+    return () => {
+      const duration = performance.now() - start
+      const times = this.renderTimes.get(name) ?? []
+      times.push(duration)
+      this.renderTimes.set(name, times)
+    }
+  }
+
+  getStats(): ComponentRenderStat[] {
+    return Array.from(this.renderTimes.entries()).map(([name, times]) => ({
+      name,
+      count: times.length,
+      avgMs: times.reduce((a, b) => a + b, 0) / times.length,
+      maxMs: Math.max(...times),
+      minMs: Math.min(...times),
+      totalMs: times.reduce((a, b) => a + b, 0),
+    }))
+  }
+
+  printComparison(before: ComponentRenderTracker, label?: string): void {
+    const afterStats = this.getStats()
+    const beforeStats = before.getStats()
+    const beforeMap = new Map(beforeStats.map((s) => [s.name, s]))
+
+    console.group(`%c📊 Component Render Comparison${label ? ` - ${label}` : ''}`, 'color: #007aff; font-size: 14px; font-weight: bold;')
+
+    afterStats.forEach((after) => {
+      const before = beforeMap.get(after.name)
+      if (before) {
+        const diff = before.avgMs - after.avgMs
+        const pct = before.avgMs > 0 ? ((diff / before.avgMs) * 100).toFixed(1) : '0'
+        const emoji = diff > 0 ? '🟢' : diff < 0 ? '🔴' : '⚪'
+        console.log(
+          `${emoji} ${after.name}: ${before.avgMs.toFixed(2)}ms → ${after.avgMs.toFixed(2)}ms (${diff > 0 ? '+' : ''}${pct}%) [${after.count} renders]`
+        )
+      } else {
+        console.log(`🆕 ${after.name}: ${after.avgMs.toFixed(2)}ms avg [${after.count} renders]`)
+      }
+    })
+
+    console.groupEnd()
+  }
+
+  clear(): void {
+    this.renderTimes.clear()
+  }
+}
+
+export const componentTracker = new ComponentRenderTracker()
+export { ComponentRenderTracker }

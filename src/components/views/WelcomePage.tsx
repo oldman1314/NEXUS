@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Plus, ClipboardPaste, Clock } from 'lucide-react'
 import { useRequestStore } from '@/stores/useRequestStore'
 import { useAppStore } from '@/stores/useAppStore'
@@ -5,7 +6,8 @@ import './welcome-page.css'
 
 export default function WelcomePage() {
   const openTab = useRequestStore((s) => s.openTab)
-  const history = useAppStore((s) => s.history.slice(0, 5))
+  const history = useAppStore((s) => s.history)
+  const recentHistory = useMemo(() => history.slice(0, 5), [history])
   const collections = useAppStore((s) => s.collections)
   const addCollection = useAppStore((s) => s.addCollection)
   const addRequestToCollection = useAppStore((s) => s.addRequestToCollection)
@@ -35,7 +37,7 @@ export default function WelcomePage() {
     openTab(newRequest, scratchpadId)
   }
 
-  const handleOpenRecent = (entry: typeof history[0]) => {
+  const handleOpenRecent = (entry: (typeof recentHistory)[number]) => {
     if (entry.requestData) {
       openTab(entry.requestData, null)
     }
@@ -79,15 +81,14 @@ export default function WelcomePage() {
           <kbd>Ctrl+W</kbd> Close Tab
         </div>
 
-        {history.length > 0 && (
+        {recentHistory.length > 0 && (
           <div className="welcome-recent">
             <div className="welcome-recent-header">
               <Clock size={12} />
               Recent Requests
             </div>
-            {history
+            {recentHistory
               .filter((h) => h.requestData)
-              .slice(0, 5)
               .map((entry) => (
                 <div
                   key={entry.id}

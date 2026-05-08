@@ -54,7 +54,6 @@ export function CollectionsList({
   onDoubleClickName, onDragStart, onDragEnd,
   onCollectionContextMenu, onRequestContextMenu,
 }: CollectionsListProps) {
-  const addRequestToCollection = null as any
   return (
     <div className="section-content" onClick={() => onSelect(null)}>
       {collections.length === 0 && (
